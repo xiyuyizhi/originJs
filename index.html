@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+ welcome
+ <script src="util/util.js"></script>
+<script src="util/module.js"></script>
+<script>
+    window.onload=function(){
+        var MODULE=window.MODULE;
+        MODULE.define('m1',function(){
+            return {
+                'name':'xiyuyizhi'
+            }
+        });
+        MODULE.define('m2',['m1'],function(m1){
+            console.log(m1);
+            return {};
+        });
+        console.log(MODULE.store)
+    }
+</script>
+</body>
+</html>

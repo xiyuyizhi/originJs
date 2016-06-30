@@ -3,11 +3,28 @@
  */
 
 (function(g){
-    var UTIL= g.UTIL,
+    var Global= g,
+        UTIL= g.UTIL,
         MODULE={
         store:{},//存储模块化组价对象
         require:function(requireModules,fn){
-
+            var _this=this,
+                relyArr=[];
+              if(arguments.length==2){
+                  if(!UTIL.isArray(requireModules)){
+                      throw new Error('依赖必须为数组')
+                  }
+                  UTIL.forEach(requireModules,function(item){
+                      if(!_this.store[item]){
+                          throw new Error('module ' +item +"未定义");
+                      }
+                      relyArr.push(_this.store[item]);
+                  })
+                  if(!UTIL.isFunction(fn)){
+                      throw new Error('最后一个参数必须为函数');
+                  }
+                  fn.apply(this,relyArr);
+              }
         },
         define:function(moduleName,relyModules,cb){
             var _this=this,
@@ -31,9 +48,7 @@
                 if(!UTIL.isFunction(callback)){
                     throw new Error('参数有误,最后一个参数必须为函数')
                 }
-                console.log(rely.forEach);
                 UTIL.forEach(rely,function(item){
-                     console.log(item);
                     if(!_this.store[item]){
                         throw new Error('module '+item +'没有定义');
                     }

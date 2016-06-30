@@ -15,11 +15,15 @@
             return {
                 'name':'xiyuyizhi'
             }
-        });
+        });ri
         MODULE.define('m2',['m1'],function(m1){
-            console.log(m1);
-            return {};
+            return function(obj){
+                console.log('print '+obj)
+            };
         });
+        MODULE.require(['m1','m2'],function(m1,m2){
+            m2(m1)
+        })
         console.log(MODULE.store)
     }
 </script>

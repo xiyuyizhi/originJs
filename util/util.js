@@ -11,6 +11,9 @@
     UTIL.isFunction=function(fn){
         return Object.prototype.toString.call(fn)=='[object Function]';
     };
+    UTIL.isString=function(str){
+        return typeof str=='string';
+    }
 
 //ie8及以下不支持forEach
     UTIL.forEach=function(arr,cb){

@@ -13,27 +13,31 @@
             var fn=function(){};
             expect(UTIL.isFunction(fn)).toBe(true);
         });
+        it('UTIL.isString',function(){
+            expect(UTIL.isString([1])).toBe(false);
+            expect(UTIL.isString('123')).toBe(true)
+        })
     })
 
     describe('test MODULE',function(){
 
-        it('三参,第二个参数是数组',function(){
+        it('两参,依赖列表必须为数组',function(){
             expect(function(){
                 MODULE.define('m1',1,1)
-            }).toThrowError(/参数有误/);
+            }).toThrowError(/依赖必须为数组/);
         });
-        it('三参,依赖要先定义',function(){
+        it('两参,依赖要提前定义',function(){
             expect(function(){
                 MODULE.define('m1',['m2'],function(){})
-            }).toThrowError(/module.*没有定义/);
+            }).toThrowError(/未定义/);
         });
-        it('三参，最后一个参数为数组',function(){
+        it('两参,最后一个参数为数组',function(){
             expect(function(){
                 MODULE.define('m2',function(){
                     return {};
                 })
                 MODULE.define('m1',['m2'],'notFn')
-            }).toThrowError(/必须为函数/);
+            }).toThrowError(/最后一个参数必须为函数/);
         })
     })
 })();

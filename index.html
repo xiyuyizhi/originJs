@@ -15,16 +15,20 @@
             return {
                 'name':'xiyuyizhi'
             }
-        });ri
+        });
         MODULE.define('m2',['m1'],function(m1){
             return function(obj){
-                console.log('print '+obj)
+                return ('print '+obj)
             };
         });
         MODULE.require(['m1','m2'],function(m1,m2){
             m2(m1)
         })
-        console.log(MODULE.store)
+        console.log(MODULE.require('m1'));
+
+        var destPath='user_function.json';
+        console.log(/js/.test(destPath) && !/json$/.test(destPath))
+
     }
 </script>
 </body>

@@ -3,32 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
- welcome
- <script src="util/util.js"></script>
+welcome
+<div id="div1">
+    <span class="span1"></span>
+</div>
+<button class="Test btn1">btn1</button>
+<button class="btn2">btn2</button>
+<script src="util/util.js"></script>
 <script src="util/module.js"></script>
+<script src="util/event.js"></script>
+<script src="util/query.js"></script>
 <script>
-    window.onload=function(){
-        var MODULE=window.MODULE;
-        MODULE.define('m1',function(){
+    window.onload = function () {
+        var MODULE = window.MODULE;
+        MODULE.define('m1', function () {
             return {
-                'name':'xiyuyizhi'
+                'name': 'xiyuyizhi'
             }
         });
-        MODULE.define('m2',['m1'],function(m1){
-            return function(obj){
-                return ('print '+obj)
+        MODULE.define('m2', ['m1'], function (m1) {
+            return function (obj) {
+                return ('print ' + obj)
             };
         });
-        MODULE.require(['m1','m2'],function(m1,m2){
+        MODULE.require(['m1', 'm2'], function (m1, m2) {
             m2(m1)
         })
-        console.log(MODULE.require('m1'));
+        //var btns=document.querySelectorAll('button')
+        //console.log(btns);
+        /*for(var i=0;i<btns.length;i++){
+         btns[i].attachEvent('on'+'click',function(e){
+         console.log(e.srcElement.className)
+         })
+         }*/
 
-        var destPath='user_function.json';
-        console.log(/js/.test(destPath) && !/json$/.test(destPath))
-
+        /*console.log(UTIL.browser());
+         console.log(window.document.body);
+         console.log(window.innerWidth);
+         console.log(document.body.clientWidth);*/
+        for (var item in window.document) {
+            //console.log(item)
+        }
+        MODULE.require(['Query'],function(query){
+            console.log(query('#div1'))
+            console.log(query('.span1'))
+            console.log(query('button'))
+        })
     }
 </script>
 </body>

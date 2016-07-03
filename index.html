@@ -7,6 +7,9 @@
         body {
             margin: 0;
         }
+        .p1{
+            background: grey;
+        }
     </style>
 </head>
 <body>
@@ -30,6 +33,7 @@ welcome
 <script>
     window.onload = function () {
         var MODULE = window.MODULE;
+        console.log(MODULE)
         MODULE.define('m1', function () {
             return {
                 'name': 'xiyuyizhi'
@@ -42,29 +46,23 @@ welcome
         });
         MODULE.require(['m1', 'm2'], function (m1, m2) {
             m2(m1)
-        })
-        //var btns=document.querySelectorAll('button')
-        //console.log(btns);
-        /*for(var i=0;i<btns.length;i++){
-         btns[i].attachEvent('on'+'click',function(e){
-         console.log(e.srcElement.className)
-         })
-         }*/
+        });
 
         /*console.log(UTIL.browser());
          console.log(window.document.body);
          console.log(window.innerWidth);
          console.log(document.body.clientWidth);*/
-        for (var item in window.document) {
-            //console.log(item)
-        }
+
         MODULE.require(['Query'],function(query){
-            /*console.log(query('#div1').elements.length)
-            console.log(query('.span1').elements.length)
-            console.log(query('button').elements.length)*/
             console.log(query('#div1').find('span'))
             console.log(query('#div2').find('p').find('span'))
             console.log(query('#div2 .p1 .span3').elements[0].innerHTML);
+            var btn=query('button');
+            var clickListener=function(e){
+                console.log(e.target.innerHTML);
+                btn.off('click',clickListener);
+            };
+            btn.on('click',clickListener);
         })
     }
 </script>

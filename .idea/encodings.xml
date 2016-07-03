@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/test/UTIL-test.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/util/module.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/util/util.js" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

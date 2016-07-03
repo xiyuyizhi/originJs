@@ -14,7 +14,7 @@
     UTIL.isString=function(str){
         return typeof str=='string';
     };
-    //IE67不支持getElementsByClassName
+    //IE67涓嶆敮鎸乬etElementsByClassName
     UTIL.getElementsByClassName=function(dom,seletor){
         var eles,
             nodeList=[],
@@ -29,7 +29,7 @@
         return nodeList;
     };
 
-//ie8及以下不支持forEach
+//ie8鍙婁互涓嬩笉鏀寔forEach
     UTIL.forEach=function(arr,cb){
         if(arr.forEach){
             arr.forEach(cb);
@@ -40,16 +40,16 @@
         }
     };
     UTIL.browser=function(){
-      var userAgent=window.navigator.userAgent,
-          IEPatten=/MSIE\s*(\d+)/,
-          chromePatten=/Chrome\/(\d+)/,
-          FFPattten=/Firefox\/(\d+)/;
+        var userAgent=window.navigator.userAgent,
+            IEPatten=/MSIE\s*(\d+)/,
+            chromePatten=/Chrome\/(\d+)/,
+            FFPattten=/Firefox\/(\d+)/;
         console.log(userAgent);
-         return {
-             isIE:IEPatten.test(userAgent)&&IEPatten.exec(userAgent)[1],
-             isChrome:chromePatten.test(userAgent),
-             isFF:FFPattten.test(userAgent)
-         }
+        return {
+            isIE:IEPatten.test(userAgent)&&IEPatten.exec(userAgent)[1],
+            isChrome:chromePatten.test(userAgent),
+            isFF:FFPattten.test(userAgent)
+        }
     };
 
 

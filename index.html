@@ -25,7 +25,7 @@ welcome
 </div>
 <button class="Test btn1">btn1</button>
 <button class="btn2">btn2</button>
-
+<a href="http://www.baidu.com">百度</a>
 <script src="util/util.js"></script>
 <script src="util/module.js"></script>
 <script src="util/event.js"></script>
@@ -59,10 +59,25 @@ welcome
             console.log(query('#div2 .p1 .span3').elements[0].innerHTML);
             var btn=query('button');
             var clickListener=function(e){
-                console.log(e.target.innerHTML);
+                console.log(e);
                 btn.off('click',clickListener);
             };
             btn.on('click',clickListener);
+            query('.p1').on('click',function(e){
+                console.log('p')
+            },false);
+            query('.p1 span').on('click',function(e){
+                console.log('span 捕获');
+                console.log(e);
+                console.log(e.clientX)
+                e.stopPropagation();
+            },true)
+            query('.p1 span').on('click',function(e){
+                console.log('span 冒泡')
+            },false)
+            query('a').on('click',function(e){
+                e.preventDefault();
+            });
         })
     }
 </script>

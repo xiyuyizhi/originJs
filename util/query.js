@@ -2,7 +2,7 @@
  * Created by Administrator on 2016/7/1.
  */
 
-MODULE.define('Query',['EventHandle'],function (EventHandle) {
+MODULE.define('Query', ['EventHandle'], function (EventHandle) {
 
     function Q(seletor) {
         return new Query(seletor)
@@ -73,18 +73,26 @@ MODULE.define('Query',['EventHandle'],function (EventHandle) {
         });
         return this;
     };
-    Query.prototype.on=function(eventType,listener,isCapture){
-        UTIL.forEach(this.elements,function(ele){
-            ele[eventType]=function(e){
-                e.target= e.target|| e.srcElement;
+    Query.prototype.on = function (eventType, listener, isCapture) {
+        UTIL.forEach(this.elements, function (ele) {
+            ele[eventType] = function (e) {
+                e.target = e.target || e.srcElement;
+                //阻止事件继续传播
+                e.stopPropagation = e.stopPropagation || function () {
+                        e.cancelBubble = true;
+                    };
+                //阻止默认行为
+                e.preventDefault = e.preventDefault || function () {
+                        e.returnValue = false;
+                    };
                 listener(e);
             };
-            EventHandle.on(ele,eventType,ele[eventType],isCapture)
+            EventHandle.on(ele, eventType, ele[eventType], isCapture)
         })
     };
-    Query.prototype.off=function(eventType,listener,isCapture){
-        UTIL.forEach(this.elements,function(ele){
-            EventHandle.off(ele,eventType,ele[eventType],isCapture)
+    Query.prototype.off = function (eventType, listener, isCapture) {
+        UTIL.forEach(this.elements, function (ele) {
+            EventHandle.off(ele, eventType, ele[eventType], isCapture)
         })
     };
     return Q;

@@ -12,10 +12,17 @@
 <body>
 welcome
 <div id="div1">
-    <span class="span1"></span>
+    <span class="span1">span1</span>
+    <span class="span2">span2</span>
+</div>
+<div id="div2">
+    <p class="p1">
+        <span class="span3">span3</span>
+    </p>
 </div>
 <button class="Test btn1">btn1</button>
 <button class="btn2">btn2</button>
+
 <script src="util/util.js"></script>
 <script src="util/module.js"></script>
 <script src="util/event.js"></script>
@@ -52,9 +59,12 @@ welcome
             //console.log(item)
         }
         MODULE.require(['Query'],function(query){
-            console.log(query('#div1'))
-            console.log(query('.span1'))
-            console.log(query('button'))
+            /*console.log(query('#div1').elements.length)
+            console.log(query('.span1').elements.length)
+            console.log(query('button').elements.length)*/
+            console.log(query('#div1').find('span'))
+            console.log(query('#div2').find('p').find('span'))
+            console.log(query('#div2 .p1 .span3').elements[0].innerHTML);
         })
     }
 </script>

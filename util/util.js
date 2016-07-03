@@ -26,7 +26,7 @@
                 nodeList.push(eles[i])
             }
         }
-        return eles;
+        return nodeList;
     };
 
 //ie8及以下不支持forEach

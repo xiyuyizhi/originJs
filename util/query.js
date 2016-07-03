@@ -4,7 +4,7 @@
 
 MODULE.define('Query', function () {
 
-    function Q(seletor){
+    function Q(seletor) {
         return new Query(seletor)
     }
 
@@ -13,51 +13,65 @@ MODULE.define('Query', function () {
         if (!UTIL.isString(seletor)) {
             throw new Error('选择器必须为字符串')
         }
-        this.select(seletor);
+        this.elements = this.select(seletor, document);
         return this;
     }
-    Query.prototype.select=function(seletor){
-        var pattern = /([#\.])(\S+)/;
-        if(document.querySelector){
-            this.elements=this.elements.concat(document.querySelectorAll(seletor));
-        }
-        else{
-            if (/\S+\s+\S+/.test(seletor)) {
-                //选择器中间有空格
 
+    Query.prototype.select = function (seletor, dom) {
+        var pattern,
+            doc = dom || document;
+        if (document.querySelector) {
+            return doc.querySelectorAll(seletor);
+        }
+        else {
+            pattern = /([#\.])(\S+)/
+            if (/(\S+)\s+(\S+)/.test(seletor)) {
+                //选择器中间有空格
+                var selectArr=seletor.split(/\s+/),
+                    tempQ=new Query(selectArr[0]);
+                for(var i=1;i<selectArr.length;i++){
+                    tempQ=tempQ.find(selectArr[i]);
+                }
+                return tempQ.elements;
             }
             else {
                 //id,class,target
                 var seletorArr = pattern.exec(seletor);
                 if (seletorArr) {
                     //id,class
-                    this.elements=this.elements.concat(this.querySelect(seletorArr[1],seletorArr[2]))
+                    return this.querySelect(seletorArr[1], seletorArr[2], doc);
                 } else {
                     //target
-                    this.elements=this.elements.concat(this.querySelect('',seletor))
+                    return this.querySelect('', seletor, doc);
                 }
             }
         }
     };
-    Query.prototype.querySelect = function (type, select,dom) {
-        var doc=dom||document;
+    Query.prototype.querySelect = function (type, select, dom) {
         switch (type) {
             case '#':
-                return doc.getElementById(select);
+                return [dom.getElementById(select)];
                 break;
             case '.':
                 //兼容IE67
-                return UTIL.getElementsByClassName(doc,select);
+                return UTIL.getElementsByClassName(dom, select);
                 break;
             default :
-                return doc.getElementsByTagName(select);
+                return dom.getElementsByTagName(select);
         }
     };
 
     Query.prototype.find = function (selector) {
-          for(var index=0;index<this.elements.length;index++){
-             this.querySelect(this.elements[index])
-          }
+        var parentEles = this.elements,
+            _this=this;
+        this.elements = [];
+        UTIL.forEach(parentEles,function(itemEl){
+            var els=_this.select(selector, itemEl);
+            for(var i=0;i<els.length;i++){
+                _this.elements.push(els[i]);
+            }
+        });
+        return this;
     };
 
 

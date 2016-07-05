@@ -12,7 +12,9 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
         this.elements = [];
         if (seletor == window ||seletor==document) {
             this.elements = [seletor];
-        } else {
+        }else if(UTIL.isFunction(seletor)){
+            new Query(document).ready(seletor);
+        } else{
             this.elements = this.select(seletor, document);
         }
         return this;
@@ -91,6 +93,7 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
             return this.elements[0].innerHTML.replace(/\s+/,'');
         }
     };
+
     Query.prototype.text=function(text){
         if(text){
             UTIL.forEach(this.elements,function(ele){
@@ -100,6 +103,7 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
             return (this.elements[0].innerText||this.elements[0].textContent);
         }
     };
+
     Query.prototype.on = function (eventType, listener, isCapture) {
         var originFn = 'originFn',
             eventTypeFn = eventType + 'Fn';
@@ -108,6 +112,7 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
             ele[eventTypeFn] = ele[eventTypeFn] || [];
             ele[originFn].push(listener);
             var fn = function (e) {
+                e=e|| g.event;
                 e.target = e.target || e.srcElement;
                 //阻止事件继续传播
                 e.stopPropagation = e.stopPropagation || function () {
@@ -115,7 +120,10 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
                     };
                 //阻止默认行为
                 e.preventDefault = e.preventDefault || function () {
-                        e.returnValue = false;
+                        if(e.returnValue){
+                            e.returnValue = false
+                        }
+                        return false;
                     };
                 return listener.call(ele, e);
             };
@@ -151,6 +159,23 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
             }
         });
         return this;
+    };
+
+    //封装DOMContentLoaded和readystatechange事件
+    Query.prototype.ready=function(fn){
+        var isReady=false;
+        function readyHandle(e){
+            if(isReady){
+                return;
+            }
+            if(e.type=='readystatechange' && document.readyState!=='complete'){
+                return;
+            }
+            isReady=true;
+            fn();
+        }
+        this.on('DOMContentLoaded',readyHandle);
+        this.on('readystatechange',readyHandle)
     };
     return Q;
 });

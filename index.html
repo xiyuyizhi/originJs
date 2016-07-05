@@ -37,34 +37,20 @@ welcome
     <span>innerHtml</span>
 </p>
 <button class=htmlbtn>修改html</button>
+<img src="http://www.ucbug.cc/uploads/160418/1-16041Q05132333.gif">
+
 <script src="util/util.js"></script>
 <script src="util/module.js"></script>
 <script src="util/event.js"></script>
 <script src="util/query.js"></script>
 <script>
-    window.onload = function () {
-        var MODULE = window.MODULE;
-        console.log(MODULE)
-        MODULE.define('m1', function () {
-            return {
-                'name': 'xiyuyizhi'
-            }
-        });
-        MODULE.define('m2', ['m1'], function (m1) {
-            return function (obj) {
-                return ('print ' + obj)
-            };
-        });
-        MODULE.require(['m1', 'm2'], function (m1, m2) {
-            m2(m1)
-        });
 
-        /*console.log(UTIL.browser());
-         console.log(window.document.body);
-         console.log(window.innerWidth);
-         console.log(document.body.clientWidth);*/
-
-        MODULE.require(['Query'], function (query) {
+    MODULE.require(['Query'], function (query) {
+        query(function () {
+            /*console.log(UTIL.browser());
+             console.log(window.document.body);
+             console.log(window.innerWidth);
+             console.log(document.body.clientWidth);*/
             console.log(query('#div1').find('span'))
             console.log(query('#div2').find('p').find('span'))
             console.log(query('#div2 .p1 .span3').elements[0].innerHTML);
@@ -101,27 +87,28 @@ welcome
             })
             console.log(query(document))
             /*query(document).on('click',function(){
-                alert('click document')
-            });*/
-            query(window).on('resize',function(e){
+             alert('click document')
+             });*/
+            query(window).on('resize', function (e) {
                 console.log('resize')
             })
-            query('button').eq(0).on('mouseover',function(){
+            query('button').eq(0).on('mouseover', function () {
                 console.log(this.innerHTML)
             })
-            query('button').eq(1).on('click',function(){
+            query('button').eq(1).on('click', function () {
                 console.log('click btn2')
             })
-            query('button').on('click',function(e){
+            query('button').on('click', function (e) {
                 alert(e.target.className)
             });
             console.log(query('.html').html())
-            query('.htmlbtn').on('click',function(){
+            query('.htmlbtn').on('click', function () {
                 query('.html span').text('<a href="">哈哈哈</a>')
             })
             console.log(query('.html').text())
         })
-    }
+    });
+
 </script>
 </body>
 </html>

@@ -10,10 +10,11 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
 
     function Query(seletor) {
         this.elements = [];
-        if (!UTIL.isString(seletor)) {
-            throw new Error('选择器必须为字符串')
+        if (seletor == window ||seletor==document) {
+            this.elements = [seletor];
+        } else {
+            this.elements = this.select(seletor, document);
         }
-        this.elements = this.select(seletor, document);
         return this;
     }
 
@@ -47,6 +48,7 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
             }
         }
     };
+
     Query.prototype.querySelect = function (type, select, dom) {
         switch (type) {
             case '#':
@@ -73,6 +75,31 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
         });
         return this;
     };
+
+    Query.prototype.eq = function (index) {
+        var q = new Query();
+        q.elements=[this.elements[index]];
+        return q;
+    };
+
+    Query.prototype.html = function (html) {
+        if(html){
+            UTIL.forEach(this.elements,function(ele){
+                ele.innerHTML=html;
+            })
+        }else{
+            return this.elements[0].innerHTML.replace(/\s+/,'');
+        }
+    };
+    Query.prototype.text=function(text){
+        if(text){
+            UTIL.forEach(this.elements,function(ele){
+                ele.innerText?ele.innerText=text:ele.textContent=text;
+            })
+        }else{
+            return (this.elements[0].innerText||this.elements[0].textContent);
+        }
+    };
     Query.prototype.on = function (eventType, listener, isCapture) {
         var originFn = 'originFn',
             eventTypeFn = eventType + 'Fn';
@@ -90,17 +117,18 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
                 e.preventDefault = e.preventDefault || function () {
                         e.returnValue = false;
                     };
-                listener.call(ele, e);
+                return listener.call(ele, e);
             };
             ele[eventTypeFn].push(fn);
             EventHandle.on(ele, eventType, fn, isCapture);
         });
         return this;
     };
+
     Query.prototype.off = function (eventType, listener, isCapture) {
         var originFn = 'originFn',
             eventTypeFn = eventType + 'Fn',
-            args=arguments;
+            args = arguments;
         UTIL.forEach(this.elements, function (ele) {
             var index = 0;
             if (args.length == 1) {
@@ -112,7 +140,7 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
                 ele[eventTypeFn] = [];
             } else {
                 //移除元素指定事件类型的指定事件处理程序
-                UTIL.forEach(ele[originFn],function(itemListener,dex){
+                UTIL.forEach(ele[originFn], function (itemListener, dex) {
                     if (itemListener == listener) {
                         index = dex;
                     }

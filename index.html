@@ -31,6 +31,12 @@ welcome
 <button class="btn2">btn2</button>
 <a href="http://www.baidu.com" target="_blank">百度</a>
 <input type="text" id="input1">
+<hr/>
+<p class="html">
+    <span>innerHTML</span>
+    <span>innerHtml</span>
+</p>
+<button class=htmlbtn>修改html</button>
 <script src="util/util.js"></script>
 <script src="util/module.js"></script>
 <script src="util/event.js"></script>
@@ -62,12 +68,6 @@ welcome
             console.log(query('#div1').find('span'))
             console.log(query('#div2').find('p').find('span'))
             console.log(query('#div2 .p1 .span3').elements[0].innerHTML);
-            var btn = query('button');
-            var clickListener = function (e) {
-                console.log(e);
-                btn.off('click', clickListener);
-            };
-            btn.on('click', clickListener);
             query('.p1').on('click', function (e) {
                 console.log('p')
             }, false);
@@ -82,7 +82,7 @@ welcome
                 console.log('this指向:' + this.innerHTML);
             }, false);
             query('a').on('click', function (e) {
-                //e.preventDefault();
+                e.preventDefault();
             });
             query('#input1').on('keypress', function (e) {
                 console.log(e)
@@ -99,6 +99,27 @@ welcome
                 div3.off('click');
                 alert('移除listener')
             })
+            console.log(query(document))
+            /*query(document).on('click',function(){
+                alert('click document')
+            });*/
+            query(window).on('resize',function(e){
+                console.log('resize')
+            })
+            query('button').eq(0).on('mouseover',function(){
+                console.log(this.innerHTML)
+            })
+            query('button').eq(1).on('click',function(){
+                console.log('click btn2')
+            })
+            query('button').on('click',function(e){
+                alert(e.target.className)
+            });
+            console.log(query('.html').html())
+            query('.htmlbtn').on('click',function(){
+                query('.html span').text('<a href="">哈哈哈</a>')
+            })
+            console.log(query('.html').text())
         })
     }
 </script>

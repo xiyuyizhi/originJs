@@ -74,8 +74,13 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
         return this;
     };
     Query.prototype.on = function (eventType, listener, isCapture) {
+        var originFn = 'originFn',
+            eventTypeFn = eventType + 'Fn';
         UTIL.forEach(this.elements, function (ele) {
-            ele[eventType] = function (e) {
+            ele[originFn] = ele[originFn] || [];
+            ele[eventTypeFn] = ele[eventTypeFn] || [];
+            ele[originFn].push(listener);
+            var fn = function (e) {
                 e.target = e.target || e.srcElement;
                 //阻止事件继续传播
                 e.stopPropagation = e.stopPropagation || function () {
@@ -85,15 +90,39 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
                 e.preventDefault = e.preventDefault || function () {
                         e.returnValue = false;
                     };
-                listener(e);
+                listener.call(ele, e);
             };
-            EventHandle.on(ele, eventType, ele[eventType], isCapture)
-        })
+            ele[eventTypeFn].push(fn);
+            EventHandle.on(ele, eventType, fn, isCapture);
+        });
+        return this;
     };
     Query.prototype.off = function (eventType, listener, isCapture) {
+        var originFn = 'originFn',
+            eventTypeFn = eventType + 'Fn',
+            args=arguments;
         UTIL.forEach(this.elements, function (ele) {
-            EventHandle.off(ele, eventType, ele[eventType], isCapture)
-        })
+            var index = 0;
+            if (args.length == 1) {
+                //移除元素指定事件类型的所有事件处理程序
+                for (var i = 0; i < ele[eventTypeFn].length; i++) {
+                    EventHandle.off(ele, eventType, ele[eventTypeFn][i], isCapture);
+                }
+                ele[originFn] = [];
+                ele[eventTypeFn] = [];
+            } else {
+                //移除元素指定事件类型的指定事件处理程序
+                UTIL.forEach(ele[originFn],function(itemListener,dex){
+                    if (itemListener == listener) {
+                        index = dex;
+                    }
+                })
+                EventHandle.off(ele, eventType, ele[eventTypeFn][index], isCapture);
+                ele[originFn].splice(index, 1);
+                ele[eventTypeFn].splice(index, 1);
+            }
+        });
+        return this;
     };
     return Q;
 });

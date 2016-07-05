@@ -7,7 +7,8 @@
         body {
             margin: 0;
         }
-        .p1{
+
+        .p1 {
             background: grey;
         }
     </style>
@@ -23,9 +24,13 @@ welcome
         <span class="span3">span3</span>
     </p>
 </div>
+<div id="div3">同一个事件目标同一个事件类型绑定多个事件处理程序</div>
+<span class="btn3">取消绑定的多个事件</span>
+<br>
 <button class="Test btn1">btn1</button>
 <button class="btn2">btn2</button>
-<a href="http://www.baidu.com">百度</a>
+<a href="http://www.baidu.com" target="_blank">百度</a>
+<input type="text" id="input1">
 <script src="util/util.js"></script>
 <script src="util/module.js"></script>
 <script src="util/event.js"></script>
@@ -53,31 +58,47 @@ welcome
          console.log(window.innerWidth);
          console.log(document.body.clientWidth);*/
 
-        MODULE.require(['Query'],function(query){
+        MODULE.require(['Query'], function (query) {
             console.log(query('#div1').find('span'))
             console.log(query('#div2').find('p').find('span'))
             console.log(query('#div2 .p1 .span3').elements[0].innerHTML);
-            var btn=query('button');
-            var clickListener=function(e){
+            var btn = query('button');
+            var clickListener = function (e) {
                 console.log(e);
-                btn.off('click',clickListener);
+                btn.off('click', clickListener);
             };
-            btn.on('click',clickListener);
-            query('.p1').on('click',function(e){
+            btn.on('click', clickListener);
+            query('.p1').on('click', function (e) {
                 console.log('p')
-            },false);
-            query('.p1 span').on('click',function(e){
+            }, false);
+            query('.p1 span').on('click', function (e) {
                 console.log('span 捕获');
                 console.log(e);
                 console.log(e.clientX)
                 e.stopPropagation();
-            },true)
-            query('.p1 span').on('click',function(e){
+            }, true);
+            query('.p1 span').on('click', function (e) {
                 console.log('span 冒泡')
-            },false)
-            query('a').on('click',function(e){
-                e.preventDefault();
+                console.log('this指向:' + this.innerHTML);
+            }, false);
+            query('a').on('click', function (e) {
+                //e.preventDefault();
             });
+            query('#input1').on('keypress', function (e) {
+                console.log(e)
+            });
+            var div3 = query('#div3');
+            var div3Fn1 = function () {
+                        alert('div3 listener 1')
+                    },
+                    div3Fn2 = function () {
+                        alert('div3 listener 2')
+                    };
+            div3.on('click', div3Fn1).on('click', div3Fn2);
+            query('.btn3').on('click', function () {
+                div3.off('click');
+                alert('移除listener')
+            })
         })
     }
 </script>

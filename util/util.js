@@ -55,5 +55,5 @@
 
     w.UTIL=UTIL;
 
-})(window)
+})(window);
 

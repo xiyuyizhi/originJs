@@ -74,5 +74,7 @@
 
             }
         };
-    g.MODULE = MODULE;
+    g.store=MODULE.store;
+    g.require=MODULE.require;
+    g.define=MODULE.define;
 })(window);

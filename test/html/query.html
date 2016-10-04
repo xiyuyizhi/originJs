@@ -3,8 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+
+    <style>
+        div,p,span{
+            border: 1px solid red;
+            padding: 10px;
+        }
+    </style>
 </head>
+
 <body>
 
+  <div class="div1">
+      <p class="p1">
+          <span  class="span1">span1</span>
+      </p>
+  </div>
+
+  <div class="div2">
+      <p class="p2">
+          <span  class="span2">span2</span>
+      </p>
+  </div>
+
 </body>
+<script src="../../util/util.js"></script>
+<script src="../../util/module.js"></script>
+<script src="../../util/event.js"></script>
+<script src="../../util/query.js"></script>
+<script src="../../util/pubSub.js"></script>
+<script>
+    require(['Query','PubSub'],function(query,pubsub){
+        var div1=query('.div1');
+        console.log(div1);
+        div1.on('click',function(){
+            console.log('click div1');
+            div1.off('click',arguments.callee);
+        });
+        div1.on('click',function(){
+            console.log('click div1 fn2')
+        });
+
+        var div2=query('.div2'),
+                span2=query('.span2');
+        div2.on('click',function(e){
+            console.log('click div2')
+            console.log(e.target.className);
+        },true);
+//        span2.on('click',function(e){
+//            console.log('click span2')
+//            console.log(e)
+//        });
+
+        /**
+         * 发布订阅
+         */
+
+        pubsub.subscribe('/topic/test',function(topic,data){
+            console.log(topic+" subscribe1  :"+data);
+        });
+        pubsub.subscribe('/topic/test',function(topic,data){
+            console.log(topic+" subscribe2  :"+data);
+        });
+
+        span2.on('click',function(e){
+           pubsub.publish('/topic/test', e.clientX);
+        })
+
+    })
+</script>
+<script>
+
+    var newF=(function(){
+
+        return {
+            'name':'ww'
+        }
+
+    })();
+
+    console.log(newF)
+
+    var newF1=function(){
+        return {
+            'age':23
+        }
+    }();
+    console.log(newF1)
+
+</script>
+
+<script>
+
+    var Obj={
+        'name':'xiyuyizhi',
+        'age':22,
+        'say':function(){
+             console.log(this.name+'  '+this.age)
+        }
+    };
+
+    var newObj=Object.create(Obj);
+    newObj.say()
+
+    var newObj1=Object.create(Obj,{
+        'id':{
+            'value':123
+        }
+    })
+    console.log(newObj1)
+</script>
+
+<script>
+
+    function test(){
+        this.say=function(){
+            console.log('say')
+        }
+    }
+    test.ok=function(){
+        console.log('ok')
+    }
+    var t=new test();
+    console.log(t.ok())
+
+</script>
+
 </html>

@@ -2,13 +2,17 @@
  * Created by Administrator on 2016/7/1.
  */
 
-MODULE.define('Query', ['EventHandle'], function (EventHandle) {
-
-    function Q(seletor) {
-        return new Query(seletor)
-    }
+define('Query', ['EventHandle'], function (EventHandle) {
 
     function Query(seletor) {
+        return new Query.fn.init(seletor)
+    }
+
+    Query.fn=Query.prototype={
+        constructor:Query
+    }
+
+    Query.fn.init=function(seletor) {
         this.elements = [];
         if (seletor == window ||seletor==document) {
             this.elements = [seletor];
@@ -18,8 +22,12 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
             this.elements = this.select(seletor, document);
         }
         return this;
-    }
+    };
+    Query.fn.init.prototype=Query.fn;
 
+    /**
+     *原型方法
+     */
     Query.prototype.select = function (seletor, dom) {
         var pattern,
             doc = dom || document;
@@ -116,7 +124,7 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
                 e.target = e.target || e.srcElement;
                 //阻止事件继续传播
                 e.stopPropagation = e.stopPropagation || function () {
-                        e.cancelBubble = true;
+                        e.cancelBubble = true;//IE
                     };
                 //阻止默认行为
                 e.preventDefault = e.preventDefault || function () {
@@ -125,7 +133,7 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
                         }
                         return false;
                     };
-                return listener.call(ele, e);
+                listener.call(ele, e);
             };
             ele[eventTypeFn].push(fn);
             EventHandle.on(ele, eventType, fn, isCapture);
@@ -161,6 +169,15 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
         return this;
     };
 
+    Query.prototype.hover=function(){
+
+    };
+
+
+    Query.extend=Query.fn.extend=function(){
+
+    };
+
     //封装DOMContentLoaded和readystatechange事件
     Query.prototype.ready=function(fn){
         var isReady=false;
@@ -177,5 +194,5 @@ MODULE.define('Query', ['EventHandle'], function (EventHandle) {
         this.on('DOMContentLoaded',readyHandle);
         this.on('readystatechange',readyHandle)
     };
-    return Q;
+    return Query;
 });

@@ -8,6 +8,9 @@
     UTIL.isArray=function(arr){
         return Object.prototype.toString.call(arr)=='[object Array]';
     };
+    UTIL.toArray=function(args){
+        return [].slice.call(args);
+    }
     UTIL.isFunction=function(fn){
         return Object.prototype.toString.call(fn)=='[object Function]';
     };
